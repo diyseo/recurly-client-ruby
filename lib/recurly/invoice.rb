@@ -15,22 +15,44 @@ module Recurly
 
     # @return [Account]
     belongs_to :account
+    # @return [Subscription]
+    belongs_to :subscription
+    # @return [Invoice]
+    belongs_to :original_invoice, class_name: 'Invoice'
+
+    # @return [Redemption]
+    has_one :redemption
+
+    def invoice_number_with_prefix
+      "#{invoice_number_prefix}#{invoice_number}"
+    end
 
     define_attribute_methods %w(
       uuid
       state
       invoice_number
+      invoice_number_prefix
       po_number
       vat_number
       subtotal_in_cents
       tax_in_cents
+      tax_type
+      tax_region
+      tax_rate
       total_in_cents
       currency
       created_at
+      closed_at
+      amount_remaining_in_cents
       line_items
       transactions
+      terms_and_conditions
+      customer_notes
+      address
+      net_terms
+      collection_method
     )
-    alias to_param invoice_number
+    alias to_param invoice_number_with_prefix
 
     # Marks an invoice as paid successfully.
     #
