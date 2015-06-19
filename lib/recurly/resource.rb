@@ -453,6 +453,10 @@ module Recurly
         associations.find{ |a| a.resource_class == resource_class }
       end
 
+      def associations_helper
+        @associations_helper ||= Module.new.tap { |helper| include helper }
+      end
+
       # Establishes a has_many association.
       #
       # @return [Proc, nil]
@@ -463,7 +467,7 @@ module Recurly
       #                                      if not same as collection_name.
       def has_many collection_name, options = {}
         associations << Association.new(:has_many, collection_name.to_s, options)
-        self::Associations.module_eval {
+        associations_helper.module_eval {
           define_method(collection_name) {
             self[collection_name] ||= []
           }
@@ -485,7 +489,7 @@ module Recurly
       #                                      if not same as member_name.
       def has_one member_name, options = {}
         associations << Association.new(:has_one, member_name.to_s, options)
-        self::Associations.module_eval {
+        associations_helper.module_eval {
           define_method(member_name) { self[member_name] }
           if options.key?(:readonly) && options[:readonly] == false
             associated = Recurly.const_get Helper.classify(member_name), false
@@ -523,7 +527,7 @@ module Recurly
       #                                      if not same as parent_name.
       def belongs_to parent_name, options = {}
         associations << Association.new(:belongs_to, parent_name.to_s, options)
-        self::Associations.module_eval {
+        associations_helper.module_eval {
           define_method(parent_name) { self[parent_name] }
           if options.key?(:readonly) && options[:readonly] == false
             define_method("#{parent_name}=") { |parent|
