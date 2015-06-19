@@ -1,6 +1,5 @@
 require 'date'
 require 'erb'
-require 'recurly/resource/association'
 
 module Recurly
   # The base class for all Recurly resources (e.g. {Account}, {Subscription},
@@ -116,6 +115,7 @@ module Recurly
   #   Account.find_each { |account| p account }
   class Resource
     autoload :Pager, 'recurly/resource/pager'
+    autoload :Association,  'recurly/resource/association'
 
     # Raised when a record cannot be found.
     #
