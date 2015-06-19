@@ -1,5 +1,5 @@
 require 'date'
-
+require 'recurly/resource/association'
 
 module Recurly
   # The base class for all Recurly resources (e.g. {Account}, {Subscription},
