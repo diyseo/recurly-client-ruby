@@ -1,4 +1,5 @@
 require 'date'
+require 'erb'
 require 'recurly/resource/association'
 
 module Recurly
